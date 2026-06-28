@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
+import wordBank from '../wordBank.json'
 
 const props = defineProps({
   initial: { type: Object, default: null }
@@ -54,6 +55,33 @@ function stepSpy(d) {
 }
 
 const error = ref('')
+
+// 词库选择
+const showBank = ref(false)
+
+function applyPair(pair, swap = false) {
+  if (swap && Math.random() < 0.5) {
+    civilWord.value = pair.spy
+    spyWord.value = pair.civil
+  } else {
+    civilWord.value = pair.civil
+    spyWord.value = pair.spy
+  }
+  error.value = ''
+}
+
+// 从词库里随机抽一组，并随机决定谁是平民/卧底
+function randomPair() {
+  const groups = wordBank.groups
+  const g = groups[Math.floor(Math.random() * groups.length)]
+  const p = g.pairs[Math.floor(Math.random() * g.pairs.length)]
+  applyPair(p, true)
+}
+
+function chooseFromBank(pair) {
+  applyPair(pair, false)
+  showBank.value = false
+}
 
 const canStart = computed(() => {
   return (
@@ -120,6 +148,13 @@ function onStart() {
     </section>
 
     <section class="card">
+      <div class="words-head">
+        <h2>词汇</h2>
+        <div class="word-actions">
+          <button class="mini" @click="randomPair">🎲 随机</button>
+          <button class="mini accent" @click="showBank = true">📚 词库</button>
+        </div>
+      </div>
       <div class="field">
         <label class="field-label"><span class="dot civil"></span>平民词汇</label>
         <input
@@ -165,6 +200,35 @@ function onStart() {
     <button class="primary-btn" :disabled="!canStart" @click="onStart">
       开始分配身份 →
     </button>
+
+    <!-- 词库选择弹层 -->
+    <Transition name="fade">
+      <div v-if="showBank" class="overlay" @click.self="showBank = false">
+        <div class="bank-sheet">
+          <div class="bank-head">
+            <h3>选择词库</h3>
+            <button class="ghost" @click="showBank = false">关闭</button>
+          </div>
+          <div class="bank-body">
+            <div v-for="g in wordBank.groups" :key="g.name" class="bank-group">
+              <div class="group-title">
+                <span class="g-emoji">{{ g.emoji }}</span>{{ g.name }}
+              </div>
+              <button
+                v-for="(p, i) in g.pairs"
+                :key="i"
+                class="pair-row"
+                @click="chooseFromBank(p)"
+              >
+                <span class="pair-civil">{{ p.civil }}</span>
+                <span class="pair-vs">vs</span>
+                <span class="pair-spy">{{ p.spy }}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Transition>
   </div>
 </template>
 
@@ -247,6 +311,40 @@ h1 {
   margin: 12px 0 0;
   color: var(--muted);
   font-size: 13px;
+}
+
+.words-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+.words-head h2 {
+  margin: 0;
+  font-size: 17px;
+}
+.word-actions {
+  display: flex;
+  gap: 8px;
+}
+.mini {
+  height: 34px;
+  padding: 0 12px;
+  border-radius: 10px;
+  background: var(--card-2);
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 600;
+  border: 1px solid var(--line);
+  transition: transform 0.08s ease;
+}
+.mini:active {
+  transform: scale(0.94);
+}
+.mini.accent {
+  background: rgba(108, 92, 255, 0.18);
+  border-color: var(--primary);
+  color: var(--primary-2);
 }
 
 .field {
@@ -357,5 +455,104 @@ input:focus {
 .primary-btn:disabled {
   opacity: 0.4;
   box-shadow: none;
+}
+
+/* 词库弹层 */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(6, 7, 18, 0.78);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 60;
+}
+.bank-sheet {
+  width: 100%;
+  max-width: 560px;
+  max-height: 85dvh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: 26px 26px 0 0;
+  padding: 18px 16px calc(var(--safe-bottom) + 16px);
+}
+.bank-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.bank-head h3 {
+  margin: 0;
+  font-size: 19px;
+}
+.ghost {
+  background: transparent;
+  color: var(--muted);
+  font-size: 15px;
+  padding: 6px 4px;
+}
+.ghost:active {
+  color: var(--text);
+}
+.bank-body {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.bank-group {
+  margin-bottom: 16px;
+}
+.group-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--muted);
+  margin: 4px 2px 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.g-emoji {
+  font-size: 16px;
+}
+.pair-row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 14px 14px;
+  margin-bottom: 8px;
+  color: var(--text);
+  text-align: left;
+  transition: transform 0.08s ease, border 0.15s ease;
+}
+.pair-row:active {
+  transform: scale(0.98);
+  border-color: var(--primary);
+}
+.pair-civil {
+  flex: 1;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--civil);
+  word-break: break-all;
+}
+.pair-spy {
+  flex: 1;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--spy);
+  text-align: right;
+  word-break: break-all;
+}
+.pair-vs {
+  flex: 0 0 auto;
+  font-size: 12px;
+  color: var(--muted);
 }
 </style>
