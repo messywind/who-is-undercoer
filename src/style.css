@@ -1,18 +1,19 @@
 :root {
-  --bg: #0f1020;
-  --bg-2: #16182e;
-  --card: #1d2040;
-  --card-2: #262a52;
-  --line: #2f3566;
-  --text: #f2f3ff;
-  --muted: #9aa0c8;
-  --primary: #6c5cff;
-  --primary-2: #8a7bff;
-  --danger: #ff5d73;
-  --civil: #34c0a4;
-  --spy: #ff7a59;
-  --ok: #34c759;
-  --radius: 18px;
+  /* 小黑盒主题：纯黑底 + 标志性橙色 */
+  --bg: #000000;
+  --bg-2: #0e0e10;
+  --card: #161618;
+  --card-2: #222225;
+  --line: #2c2c30;
+  --text: #f5f5f7;
+  --muted: #9a9aa2;
+  --primary: #ff7a18;
+  --primary-2: #ff9a3c;
+  --danger: #ff4d4f;
+  --civil: #2bd17a;
+  --spy: #ff4d4f;
+  --ok: #2bd17a;
+  --radius: 16px;
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
 }
@@ -30,7 +31,7 @@ body {
 }
 
 body {
-  background: radial-gradient(120% 80% at 50% 0%, #1a1d3a 0%, var(--bg) 55%);
+  background: radial-gradient(120% 70% at 50% 0%, #2a1505 0%, #0a0603 32%, var(--bg) 64%);
   color: var(--text);
   font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue',
     Helvetica, Arial, sans-serif;

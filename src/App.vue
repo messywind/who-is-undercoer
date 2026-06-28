@@ -51,22 +51,18 @@ function backToSetup() {
 
 <template>
   <div class="screen">
-    <Transition name="fade" mode="out-in">
-      <SetupView
-        v-if="phase === 'setup'"
-        key="setup"
-        :initial="config"
-        @start="startGame"
-      />
-      <RevealView
-        v-else
-        key="reveal"
-        :players="players"
-        :config="config"
-        @redeal="redeal"
-        @back="backToSetup"
-      />
-    </Transition>
+    <SetupView
+      v-if="phase === 'setup'"
+      :initial="config"
+      @start="startGame"
+    />
+    <RevealView
+      v-else
+      :players="players"
+      :config="config"
+      @redeal="redeal"
+      @back="backToSetup"
+    />
   </div>
 </template>
 

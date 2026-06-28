@@ -119,8 +119,8 @@ function onStart() {
 <template>
   <div>
     <header class="head">
-      <div class="logo">🕵️</div>
-      <h1>谁是卧底</h1>
+      <div class="logo">盒</div>
+      <h1>黑盒鲁A分盒的<br />谁是卧底环节</h1>
       <p class="sub">本地传手机版 · 自定义词汇</p>
     </header>
 
@@ -238,13 +238,24 @@ function onStart() {
   margin: 10px 0 18px;
 }
 .logo {
-  font-size: 46px;
-  line-height: 1;
+  width: 60px;
+  height: 60px;
+  margin: 0 auto;
+  border-radius: 16px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-2));
+  color: #fff;
+  font-size: 34px;
+  font-weight: 800;
+  line-height: 60px;
+  text-align: center;
+  box-shadow: 0 8px 22px rgba(255, 122, 24, 0.4);
 }
 h1 {
-  margin: 8px 0 2px;
-  font-size: 28px;
-  letter-spacing: 2px;
+  margin: 12px 0 4px;
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 1.32;
+  letter-spacing: 1px;
 }
 .sub {
   margin: 0;
